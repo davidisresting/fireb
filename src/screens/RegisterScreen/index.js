@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { firebase } from '../../firebase/config'
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import styles from './styles';
 
 export default function RegisterScreen({navigation}) {
@@ -21,8 +22,7 @@ export default function RegisterScreen({navigation}) {
             console.log("$$$$$$$$$$")
             return
         }
-        firebase
-            .auth()
+        auth()
             .createUserWithEmailAndPassword(email, password)
             .then((response) => {
                 const uid = response.user.uid
@@ -31,7 +31,7 @@ export default function RegisterScreen({navigation}) {
                     email,
                     fullName,
                 };
-                const usersRef = firebase.firestore().collection('users')
+                const usersRef = firestore().collection('users')
                 usersRef
                     .doc(uid)
                     .set(data)

@@ -6,7 +6,33 @@ import { LoginScreen, HomeScreen, RegisterScreen } from './src/screens'
 import {decode, encode} from 'base-64'
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
-import { firebase } from './src/firebase/config'
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+
+import firebase from '@react-native-firebase/app';
+
+const credentials = {
+  apiKey: "AIzaSyDTtKPRVfPBuH3F2eeUM4b5uEvlzjYd2yg",
+  authDomain: "rocket-ec86b.firebaseapp.com",
+  databaseURL: "https://rocket-ec86b-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "rocket-ec86b",
+  storageBucket: "rocket-ec86b.appspot.com",
+  messagingSenderId: "670247851047",
+  appId: "1:670247851047:web:4c289e7d650206dbb26a02",
+  measurementId: "G-S6R4VV8ZKG"
+};
+
+const config = {
+  name: 'SECONDARY_APP',
+};
+
+await firebase.initializeApp(credentials, config);
+
+const apps = firebase.apps;
+
+apps.forEach(app => {
+  console.log('App name: ', app.name);
+});
 
 const Stack = createStackNavigator();
 
@@ -16,8 +42,8 @@ export default function App() {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    const usersRef = firebase.firestore().collection('users');
-    firebase.auth().onAuthStateChanged(user => {
+    const usersRef = firestore().collection('users');
+    auth().onAuthStateChanged(user => {
       if (user) {
         usersRef
           .doc(user.uid)
